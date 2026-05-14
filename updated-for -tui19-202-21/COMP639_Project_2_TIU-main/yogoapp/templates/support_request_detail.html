@@ -1,0 +1,73 @@
+{% extends "userbase.html" %}
+
+{% set active_page = 'requests' %}
+
+{% block title %}Support Request #{{ request.request_id }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Support Request #{{ request.request_id }}</h1>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Request details -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">{{ request.title }}</h5>
+            <p class="card-text"><strong>Type:</strong> {{ request.request_type }}</p>
+            <p class="card-text"><strong>Status:</strong> {{ request.status }}</p>
+            <p class="card-text"><strong>Submitted:</strong> {{ request.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+            <p class="card-text"><strong>Description:</strong> {{ request.description }}</p>
+            {% if request.images %}
+                <p class="card-text"><strong>Images:</strong></p>
+                <div class="d-flex flex-wrap">
+                    {% for image in request.images.split(',') %}
+                        <img src="{{ url_for('static', filename=image) }}" alt="Support image" class="img-thumbnail me-2 mb-2" style="max-width: 200px;">
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Replies -->
+    <h3>Replies</h3>
+    {% if replies %}
+        <div class="list-group mb-4">
+            {% for reply in replies %}
+                <div class="list-group-item">
+                    <p>{{ reply.reply_text }}</p>
+                    <small class="text-muted">Posted by User #{{ reply.user_id }} on {{ reply.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No replies yet.</p>
+    {% endif %}
+
+    <!-- Reply form -->
+    {% if request.status != 'Resolved' %}
+        <form method="POST" class="mt-4">
+            <div class="mb-3">
+                <label for="reply_text" class="form-label">Add a Reply</label>
+                <textarea class="form-control" id="reply_text" name="reply_text" rows="4" maxlength="1000" required></textarea>
+                <div class="form-text">Reply must be 1000 characters or less.</div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Reply</button>
+        </form>
+    {% else %}
+        <p class="text-muted">This request is Resolved. No further replies can be added.</p>
+    {% endif %}
+
+    <a href="{{ url_for('support_requests') }}" class="btn btn-secondary mt-3">Back to My Requests</a>
+</div>
+{% endblock %}

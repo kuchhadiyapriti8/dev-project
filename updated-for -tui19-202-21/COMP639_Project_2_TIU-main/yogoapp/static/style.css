@@ -1,0 +1,27 @@
+.custom-navbar {
+    background-color: #B5EC9A !important;
+    /* Custom background color */
+    font-family: 'Montserrat', "Arial", 'Helvetica', sans-serif !important;
+    height: 80px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    /* Custom font */
+}
+
+.custom-navbar .nav-link {
+    color: #201C1B !important;
+    /* Ensures text is white */
+}
+
+.custom-navbar .nav-link:hover {
+    color: rgb(0, 122, 33) !important;
+    /* Changes color on hover */
+}
+
+.content {
+    position: relative;
+    z-index: 1;
+    padding-top: 0px;
+}

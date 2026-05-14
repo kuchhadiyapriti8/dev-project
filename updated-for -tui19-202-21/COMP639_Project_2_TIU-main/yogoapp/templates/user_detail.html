@@ -1,0 +1,176 @@
+{% extends 'userbase.html' %}
+
+{% block title %}{{ user.username }} - User Detail{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Profile Overview</h4>
+                </div>
+                <div class="card-body text-center">
+                    <img src="{{ url_for('static', filename='uploads/' ~ user.profile_image) }}" 
+                         class="rounded-circle mb-3" width="150" height="150">
+                    
+                    {% if user.profile_image != 'default.png' %}
+                    <form action="{{ url_for('admin_remove_image', user_id=user.user_id) }}" method="post">
+                        <button type="submit" class="btn btn-sm btn-danger mb-3">
+                            <i class="fas fa-trash-alt"></i> Remove Photo
+                        </button>
+                    </form>
+                    {% endif %}
+                    
+                    <h3>{{ user.username }}</h3>
+                    <p class="text-muted">{{ user.email }}</p>
+                    
+                    <div class="d-flex justify-content-center gap-2 mb-3">
+                        <span class="badge 
+                            {% if user.role == 'admin' %}bg-danger
+                            {% elif user.role == 'editor' %}bg-info
+                            {% elif user.role == 'support_tech' %}bg-success
+                            {% else %}bg-secondary{% endif %}">
+                            {{ user.role|title }}
+                        </span>
+                        <span class="badge 
+                            {% if user.user_status == 'active' %}bg-success
+                            {% else %}bg-warning text-dark{% endif %}">
+                            {{ user.user_status|title }}
+                        </span>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="text-start">
+                        <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+                        <p><strong>Location:</strong> {{ user.location }}</p>
+                        {% if user.subscription_status %}
+                        <p><strong>Subscription:</strong> 
+                            <span class="badge bg-primary">{{ user.subscription_status }}</span>
+                            {% if user.subscription_expiry %}
+                            (Expires: {{ user.subscription_expiry.strftime('%Y-%m-%d') }})
+                            {% endif %}
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">User Management</h4>
+                </div>
+                <div class="card-body">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                    
+                    <form method="post" action="{{ url_for('admin_update_user', user_id=user.user_id) }}">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Username</label>
+                                <input type="text" class="form-control" name="username" value="{{ user.username }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" name="email" value="{{ user.email }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control" name="first_name" value="{{ user.first_name }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-control" name="last_name" value="{{ user.last_name }}" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Location</label>
+                                <input type="text" class="form-control" name="location" value="{{ user.location }}" required>
+                            </div>
+                            <div class="col-12 text-end">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Update Profile
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <form method="post" action="{{ url_for('change_role', user_id=user.user_id) }}">
+                                <label class="form-label">Change Role</label>
+                                <div class="input-group">
+                                    <select name="new_role" class="form-select" required>
+                                        <option value="traveller" {% if user.role == 'traveller' %}selected{% endif %}>Traveller</option>
+                                        <option value="editor" {% if user.role == 'editor' %}selected{% endif %}>Editor</option>
+                                        <option value="support_tech" {% if user.role == 'support_tech' %}selected{% endif %}>Support Tech</option>
+                                        <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-warning">
+                                        <i class="fas fa-sync-alt"></i> Update
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <form method="post" action="{{ url_for('change_status', user_id=user.user_id) }}">
+                                <label class="form-label">Change Status</label>
+                                <div class="input-group">
+                                    <select name="new_status" class="form-select" required>
+                                        <option value="active" {% if user.user_status == 'active' %}selected{% endif %}>Active</option>
+                                        <option value="ban_share" {% if user.user_status == 'ban_share' %}selected{% endif %}>Ban Share</option>
+                                        <option value="ban_all" {% if user.user_status == 'ban_all' %}selected{% endif %}>Ban All</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-warning">
+                                        <i class="fas fa-sync-alt"></i> Update
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        {% if user.role == 'traveller' %}
+                        <div class="col-12">
+                            <form method="post" action="{{ url_for('admin_reward_subscription', user_id=user.user_id) }}">
+                                <label class="form-label">Reward Subscription</label>
+                                <div class="input-group">
+                                    <select name="plan_name" class="form-select" required>
+                                        <option value="">Select a plan...</option>
+                                        {% for plan in admin_plans %}
+                                        <option value="{{ plan.plan_name }}">
+                                            {{ plan.plan_name }} ({{ plan.months }} months)
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-gift"></i> Reward
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mt-4 text-end">
+                        <a href="{{ url_for('user_management') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to User List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

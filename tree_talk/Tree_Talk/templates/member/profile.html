@@ -1,0 +1,271 @@
+{% extends 'member/nav.html' %}
+{% block title %} User Profile {% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
+<style>
+    .profile-main-container {
+        display: flex;
+        margin-top: 6rem;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .user-left-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 200px;
+        margin-right: 20px;
+    }
+    .controls {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+    .controls button, .controls li {
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 10px;
+        text-align: left;
+        cursor: pointer;
+        border: none;
+        background-color: #4CAF50;
+        color: white;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+    .controls li {
+        list-style: none;
+        background-color: #d32f2f;
+    }
+    .controls button:hover, .controls li:hover {
+        background-color: #45a049;
+    }
+    .user-right-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: calc(100% - 220px);
+    }
+    .profile-photo {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .profile-photo img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .profile-photo button {
+        margin-top: 10px;
+        padding: 10px 20px;
+        border: none;
+        background-color: #4CAF50;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .profile-photo button:hover {
+        background-color: #45a049;
+    }
+    .user-profile, .edit-profile, .change-password {
+        width: 100%;
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        margin-bottom: 20px;
+    }
+    .user-profile .profile-info {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    .profile-info div {
+        flex: 1 1 45%;
+        margin: 10px 0;
+    }
+    .profile-info p {
+        margin: 5px 0;
+        font-weight: bold;
+    }
+    .profile-info span {
+        font-weight: normal;
+        color: #555;
+    }
+    .form-row {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 15px;
+    }
+    .form-row label {
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    .form-row input {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .button-container-profile {
+        display: flex;
+        justify-content: space-between;
+    }
+    .button-container-profile button {
+        padding: 10px 20px;
+        border: none;
+        background-color: #4CAF50;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .button-container-profile button:hover {
+        background-color: #45a049;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="profile-main-container">
+    <div class="user-left-container">
+        <div class="profile-photo">
+            <img src="{{ url_for('static', filename='uploads/' ~ user[6]) }}" alt="Profile Photo" id="profilePhoto" />
+            <form method="POST" action="{{ url_for('edit_photo') }}" enctype="multipart/form-data">
+                <input type="file" name="photo" id="photoInput" style="display: none;" accept="image/*">
+                <button type="button" onclick="document.getElementById('photoInput').click();">Edit Photo</button>
+                <button type="submit">Upload Photo</button>
+            </form>
+            <form method="post" action="{{url_for('remove_image')}}">
+            <button >Remove Photo</button>
+        </form>
+        </div>
+        <div class="controls">
+            <button class="button-tertiary" onclick="handleSectionClick('edit-profile')">Edit Profile</button>
+            <li onclick="handleSectionClick('change-password')">Change Password</li>
+        </div>
+    </div>
+    <div class="user-right-container">
+        <div id="profile-info" class="user-profile">
+            <div class="profile-info">
+                <div>
+                    <p>Username: <span>{{ user[0] }}</span></p>
+                </div>
+                <div>
+                    <p>Email: <span>{{ user[1] }}</span></p>
+                </div>
+                <div>
+                    <p>First Name: <span>{{ user[2] }}</span></p>
+                </div>
+                <div>
+                    <p>Last Name: <span>{{ user[3] }}</span></p>
+                </div>
+                <div>
+                    <p>Birth Date: <span>{{ user[4] }}</span></p>
+                </div>
+                <div>
+                    <p>Location: <span>{{ user[5] }}</span></p>
+                </div>
+                <div>
+                    <p>Role: <span>{{ user[6] }}</span></p>
+                </div>
+                <div>
+                    <p>Status: <span>{{ user[7] }}</span></p>
+                </div>
+            </div>
+        </div>
+        <div id="edit-profile" class="edit-profile" style="display: none;">
+            <form method="POST" action="{{ url_for('edit_profile') }}">
+                <div class="form-row">
+                    <label>Username:</label>
+                    <input type="text" name="editedName" value="{{ user[0] }}" />
+                    <span class="error"></span>
+                </div>
+                <div class="form-row">
+                    <label>Email:</label>
+                    <input type="text" name="editedEmail" value="{{ user[1] }}" />
+                </div>
+                <div class="form-row">
+                    <label>Date of Birth:</label>
+                    <input type="date" name="editedDob" value="{{ user[4] }}" />
+                    <span class="error"></span>
+                </div>
+                <div class="form-row">
+                    <label>First Name:</label>
+                    <input type="text" name="editedfirstname" value="{{ user[2] }}" />
+                    <span class="error"></span>
+                </div>
+                <div class="form-row">
+                    <label>Last Name:</label>
+                    <input type="text" name="editedlastname" value="{{ user[3] }}" />
+                    <span class="error"></span>
+                </div>
+                <div class="form-row">
+                    <label>Location:</label>
+                    <input type="text" name="editedlocation" value="{{ user[5] }}" />
+                    <span class="error"></span>
+                </div>
+                <div class="form-row">
+                    <label>Role: {{ user[6] }}</label>
+                </div>
+                <div class="form-row">
+                    <label>Status: {{ user[7] }}</label>
+                    <span class="error"></span>
+                </div>
+                <div class="button-container-profile">
+                    <button type="submit" class="button-tertiary">Save</button>
+                    <button type="button" class="button-tertiary" onclick="handleCancelEdit()">Cancel</button>
+                </div>
+            </form>
+        </div>
+        <div id="change-password" class="change-password" style="display: none;">
+            <h3>Change Password</h3>
+            <form method="POST" action="{{ url_for('chnage_password') }}">
+                <div class="form-row">
+                    <label>Old Password:</label>
+                    <input type="password" name="oldPassword" value="" />
+                    <span class="error"></span>
+                </div>
+                <div class="form-row">
+                    <label>New Password:</label>
+                    <input type="password" name="editedPassword" value="" />
+                    <span class="error"></span>
+                </div>
+                <div class="button-container-profile">
+                    <button type="submit" class="button-tertiary">Change</button>
+                    <button type="button" class="button-tertiary" onclick="handleCancelChangePassword()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascript %}
+<script>
+    function handleSectionClick(section) {
+        document.getElementById('edit-profile').style.display = 'none';
+        document.getElementById('change-password').style.display = 'none';
+        
+        if (section === 'edit-profile') {
+            document.getElementById('edit-profile').style.display = 'block';
+        } else if (section === 'change-password') {
+            document.getElementById('change-password').style.display = 'block';
+        }
+    }
+    function handleCancelEdit() {
+        document.getElementById('edit-profile').style.display = 'none';
+    }
+    function handleCancelChangePassword() {
+        document.getElementById('change-password').style.display = 'none';
+    }
+    function handleEditPhoto() {
+        document.getElementById('photoInput').click();
+    }
+    function handleRemovePhoto() {
+        // Implement photo removal functionality here
+    }
+</script>
+{% endblock %}

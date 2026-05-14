@@ -1,0 +1,74 @@
+{% extends "userbase.html" %}
+
+{% block title %}Subscription History{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-5">Subscription History</h1>
+
+    {% if subscriptions %}
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Plan</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Payment Date</th>
+                    <th>Status</th>
+                    <th>Amount Paid</th>
+                    <th>Card Last 4</th>
+                    <th>Billing Country</th>
+                    <th>View Receipt</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sub in subscriptions %}
+                <tr>
+                    <td>{{ sub.plan_name|title }}</td>
+                    <td>{{ sub.start_date}}</td>
+                    <td>{{ sub.end_date}}</td>
+                    <td>{{ sub.payment_date or 'None'}}</td>
+                    <td>
+                        {% if sub.end_date > now %}
+                        <span class="badge bg-success">Active</span>
+                        {% else %}
+                        <span class="badge bg-secondary">Expired</span>
+                        {% endif %}
+                    </td>
+                    <td>${{ sub.amount_paid or '0.00'}}</td>
+                    <td>{{ sub.card_last4 or 'None' }}</td>
+                    <td>{{ sub.billing_country or 'None' }}</td>
+                    <!-- <td>{{ sub.subscription_id }}</td> -->
+                    <td>
+                        {% if sub.is_free_trial != 1 and sub.is_admin_grant != 1 %}
+                        <form action="/View_subscription/view_receipt" method="POST">
+                            <input type="hidden" name="sub_id" value="{{sub.subscription_id}}">
+                            <input type="hidden" name="plan_name" value="{{sub.plan_name}}">
+                            <input type="hidden" name="start_date" value="{{sub.start_date}}">
+                            <input type="hidden" name="end_date" value="{{sub.end_date}}">
+                            <input type="hidden" name="pay_date" value="{{sub.payment_date}}">
+                            <input type="hidden" name="amount_paid" value="{{sub.amount_paid}}">
+                            <input type="hidden" name="card_last4" value="{{sub.card_last4}}">
+                            <input type="hidden" name="billing_country" value="{{sub.billing_country}}">
+                            <button type="submit">View</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center">
+        <h4 class="alert-heading">No Subscriptions Found</h4>
+        <p>You haven't subscribed to any plans yet.</p>
+        <hr>
+        <p class="mb-0">
+            <a href="{{ url_for('premium') }}" class="btn btn-primary">View Premium Plans</a>
+        </p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'userbase.html' %} {% block title %}Change Log{% endblock %} {# Set
+    the active page to be highlighted in the navigation bar. #} {% set active_page =
+    'myjournal' %} {% block content %}
+    <section class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+              <h4 class="mb-0">Changelog Entries</h4>
+            </div>
+            <div class="card-body">
+              {% if changes %}
+              <div class="list-group">
+                {% for change in changes %}
+                <div class="list-group-item list-group-item-action">
+                  <div class="d-flex justify-content-between">
+                    <h5 class="mb-1">
+                      <span class="badge bg-secondary"
+                        >Change By: {{ change.username }}</span
+                      >
+                    </h5>
+                    <small class="text-muted">{{ change.changed_date }}</small>
+                  </div>
+                  <p class="mb-1">
+                    <strong>New Location:</strong> {{ change.new_location }}
+                  </p>
+                </div>
+                {% endfor %}
+              </div>
+              {% else %}
+              <div class="alert alert-info mt-4">
+                No changes found.
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    {% endblock %}

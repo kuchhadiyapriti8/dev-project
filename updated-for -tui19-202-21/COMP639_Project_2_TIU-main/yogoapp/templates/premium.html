@@ -1,0 +1,131 @@
+{% extends 'userbase.html' %}
+
+{% block title %}Welcome to YOGO{% endblock %}
+
+{# Set the active page to be highlighted in the navigation bar. #}
+{% set active_page = 'home' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1>Meet the advanced features</h1>
+        <a href="{{ url_for('View_subscription') }}" class="btn btn-outline-primary">
+            <i class="fas fa-history"></i> View Subscription History
+        </a>
+    </div>
+
+    {% if active_subscription %}
+    <div class="alert alert-success text-center mb-4">
+        <h4 class="alert-heading">Premium Active!</h4>
+        <p>Your premium subscription is active until {{ active_subscription.end_date.strftime('%B %d, %Y') }}</p>
+        <p>Current Plan: {{ active_subscription.plan_name|title }}</p>
+        <p class="mb-0">You can extend your subscription by purchasing any plan below.</p>
+    </div>
+    {% endif %}
+
+    <div class="row mb-5">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Premium Features</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">✓ Unlimited Journal Creation</li>
+                        <li class="mb-2">✓ Priority Support</li>
+                        <li class="mb-2">✓ Follow your interested creators and places</li>
+                        <li class="mb-2">✓ Show your journal to the world</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="row">
+                {% for plan in plans %}
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 {% if plan.is_free_trial %}border-primary{% endif %}">
+                        <div class="card-body">
+                            <h3 class="card-title text-center">{{ plan.plan_name|title }}</h3>
+                            <div class="text-center mb-3">
+                                {% if plan.is_free_trial %}
+                                <h4 class="text-primary">Free Trial</h4>
+                                <h6>Get 30-day access to all premium features</h6>
+                                <h6>Limit 1 time per user</h6>
+                                {% else %}
+                                <h4>${{ "%.2f"|format(plan.price_incl_gst) }} inclue GST</h4>
+                                <p type=text-muted>${{ "%.2f"|format(plan.price_excl_gst) }} exclue GST</p>
+                                {% if plan.discount_percent is not none %}
+                                <span class="badge bg-success">{{ plan.discount_percent }} off</span>
+                                {% else %}
+                                <span class="badge bg-success">No discount</span>
+                                {% endif %}
+                                {% endif %}
+                                <p class="text-muted">{{ plan.months }} months</p>
+                            </div>
+                            <div class="d-grid">
+                                {% if plan.is_free_trial %}
+                                {% if existing_subscription %}
+                                <button class="btn btn-secondary" disabled>Already Subscribed</button>
+                                {% else %}
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#freeTrialModal">
+                                    Try Now
+                                </button>
+                                {% endif %}
+                                {% else %}
+                                <form action="{{ url_for('payment', plan_name=plan.plan_name) }}" method="GET">
+                                    <button type="submit" class="btn btn-primary">
+                                        {% if active_subscription %}
+                                        Extend Subscription
+                                        {% else %}
+                                        Subscribe Now
+                                        {% endif %}
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block modal %}
+<!-- Free Trial Modal -->
+<div class="modal fade" id="freeTrialModal" tabindex="-1" aria-labelledby="freeTrialModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="freeTrialModalLabel">Start Free Trial</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to start your 30-day free trial?</p>
+                <p>You'll get access to all premium features during your trial period.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Cancel</button>
+                <form action="{{ url_for('start_free_trial') }}" method="POST">
+                    <button type="submit" class="btn btn-primary">Confirm</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .modal-backdrop {
+        z-index: 1040 !important;
+    }
+
+    .modal {
+        z-index: 1050 !important;
+    }
+
+    .modal-dialog {
+        z-index: 1051 !important;
+    }
+</style>
+{% endblock %}

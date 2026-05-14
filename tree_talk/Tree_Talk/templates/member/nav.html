@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
+    {% block style %}{% endblock %}
+</head>
+<body>
+<header>
+    <nav class="NavbarItems" id="navbar">
+        <img src="{{ url_for('static', filename= 'designer.png') }}" class="navbar-logo" alt="Tree" />
+        <div class="welcome-banner">
+            <h2 id="welcome-message"></h2>
+            <p id="user-name"></p>
+        </div>
+        <div class="menu-icons" onclick="handleClick()">
+            <i id="menu-icon" class="fas fa-bars"></i>
+        </div>
+        <ul class="nav-menu" id="nav-menu">
+            <li><a class="nav-links" href="{{url_for('m_home')}}"><i class="fas fa-home"></i>Home</a></li>
+            <li><a class="nav-links" href="{{url_for('m_chat')}}"><i class="fas fa-briefcase"></i>Discussion</a></li>
+            <li><a class="nav-links" href="{{url_for('m_profile')}}"><i class="fas fa-user"></i>Profile</a></li>
+            <li class="button-secondary" id="login-logout-button">
+                <a href="{{url_for('logout')}}">Logout</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<script src="{{url_for('static', filename='navbar.js')}}"></script>
+{% block content %}{% endblock %}
+{% block javascript %}{% endblock %}
+</body>
+</html>

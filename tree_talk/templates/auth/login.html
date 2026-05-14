@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+</head>
+<body>
+    <div class="login-main-container">
+        <div class="login-container">
+            <div class="login-left">
+                <img src="{{url_for('static',filename='designer.png')}}" alt="Logo" class="login-logo">
+                <h1 class="login-company-name">Tree Talk</h1>
+            </div>
+            <div class="login-right">
+                <div class="login-content">
+                    <h2 class="login-heading">Login</h2>
+                    <form class="login-form" method="POST">
+                        <label for="username">Username</label>
+                        <input
+                            id="username"
+                            name="username"
+                            required
+                            placeholder="Username"
+                        >
+                        <label for="password">Password</label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            required
+                            placeholder="Enter your password"
+                        >
+                        <p class="error-message" id="error-message"></p>
+                        <button type="submit" class="button-secondary">
+                            Login
+                        </button>
+                        <p>Don't have an account yet?<a href='{{url_for('register')}}'> Register Now</a></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+//         document.addEventListener('DOMContentLoaded', () => {
+//     const form = document.querySelector('.login-form');
+//     const errorElement = document.getElementById('error-message');
+
+//     form.addEventListener('submit', async (e) => {
+//         e.preventDefault();
+
+//         const username = document.getElementById('username').value;
+//         const password = document.getElementById('password').value;
+
+//         // Clear any previous error messages
+//         errorElement.textContent = '';
+
+//         if (!username || !password) {
+//             errorElement.textContent = 'Please enter both username and password';
+//             return;
+//         }
+
+//         // Validate username format (if needed)
+//         if (username.length < 3) {
+//             errorElement.textContent = 'Username must be at least 3 characters long';
+//             return;
+//         }
+
+//         // Validate password format (if needed)
+//         const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,}$/;
+//         if (!passwordRegex.test(password)) {
+//             errorElement.textContent = 'Password must be at least 8 characters long and include a mix of upper/lowercase letters, numbers, and special characters.';
+//             return;
+//         }
+
+//         try {
+//             // Send login request to the server
+//             const response = await fetch('/login', {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/x-www-form-urlencoded'
+//                 },
+//                 body: new URLSearchParams({
+//                     username: username,
+//                     password: password
+//                 })
+//             });
+
+//             if (response.ok) {
+//                 // Redirect user based on the response from the server
+//                 const data = await response.json();
+//                 console.log('Login successful:', data);
+
+//                 if (data.redirect) {
+//                     window.location.href = data.redirect;
+//                 } else {
+//                     window.location.href = '/';
+//                 }
+//             } else {
+//                 const errorData = await response.json();
+//                 errorElement.textContent = errorData.message || 'Invalid username or password. Please try again.';
+//             }
+//         } catch (error) {
+//             console.error('Error logging in:', error);
+//             errorElement.textContent = 'An error occurred while trying to log in. Please try again later.';
+//         }
+//     });
+// });
+
+    </script>
+</body>
+</html>

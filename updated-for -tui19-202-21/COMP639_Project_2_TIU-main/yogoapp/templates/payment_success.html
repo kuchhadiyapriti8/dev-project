@@ -1,0 +1,40 @@
+{% extends 'userbase.html' %}
+
+{% block title %}Payment Successful - YOGO{% endblock %}
+
+{% set active_page = 'premium' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Payment Successful!</h4>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+                    </div>
+
+                    <div class="alert alert-success">
+                        <h5>Payment Details</h5>
+                        <p>Plan: {{ plan.plan_name|title }}</p>
+                        <p>Duration: {{ plan.months }} months</p>
+                        <p>Amount Paid: ${{ "%.2f"|format(amount_paid) }}</p>
+                        {% if gst_charged %}
+                        <p>GST (15%): ${{ "%.2f"|format(gst_amount) }}</p>
+                        {% endif %}
+                        <p>Subscription Valid Until: {{ end_date.strftime('%B %d, %Y') }}</p>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('premium') }}" class="btn btn-primary">Return to Premium Page</a>
+                        <a href="{{ url_for('traveller_home') }}" class="btn btn-secondary">Go to Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

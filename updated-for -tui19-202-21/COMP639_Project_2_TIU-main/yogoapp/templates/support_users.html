@@ -1,0 +1,80 @@
+{% extends 'userbase.html' %}
+
+
+
+{% block content %}
+<div class="container my-4">
+    <h2 class="mb-4"> Support - View Users & Subscriptions</h2>
+
+    <form method="get" action="{{ url_for('support_view_users') }}" class="row g-3 mb-4">
+    <div class="col-auto">
+            <input type="text" name="search" class="form-control" placeholder="Search by username or email" value="{{ search }}">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+</form>
+
+   <table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Role</th>
+            <th>Subscription</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Ban/Unban</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for user in users %}
+        <tr>
+            <td>{{ user.first_name }} {{ user.last_name }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.user_status }}</td>
+            <td>{{ user.role }}</td>
+            <td>{{ user.plan_name or "None" }}</td>
+            <td>{{ user.start_date or "-" }}</td>
+            <td>{{ user.end_date or "-" }}</td>
+            <td>
+    {% if user.user_status == 'active' %}
+        <!-- Ban Button (triggers reason form) -->
+        <button type="button" class="btn btn-sm btn-success" onclick="showReasonForm('{{ user.user_id }}')">Ban</button>
+
+        <!-- Hidden Ban Reason Form -->
+        <form id="ban-form-{{ user.user_id }}" method="post" action="{{ url_for('toggle_ban_user') }}" class="mt-2 d-none">
+            <input type="hidden" name="user_id" value="{{ user.user_id }}">
+            <input type="hidden" name="current_status" value="{{ user.user_status }}">
+            <div class="mb-2">
+                <input type="text" name="reason" class="form-control form-control-sm" placeholder="Reason for banning" required>
+            </div>
+            <button type="submit" class="btn btn-sm btn-danger">Confirm Ban</button>
+        </form>
+    {% else %}
+        <!-- Unban Button (no reason needed) -->
+        <form method="post" action="{{ url_for('toggle_ban_user') }}">
+            <input type="hidden" name="user_id" value="{{ user.user_id }}">
+            <input type="hidden" name="current_status" value="{{ user.user_status }}">
+            <button type="submit" class="btn btn-sm btn-danger">UnBan</button>
+        </form>
+    {% endif %}
+</td>
+
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<script>
+    function showReasonForm(userId) {
+        const form = document.getElementById('ban-form-' + userId);
+        if (form) {
+            form.classList.remove('d-none');
+        }
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'userbase.html' %}
+{% block title %}Subscription Plans{% endblock %}
+
+   <!-- here to display the user current subscription details, and 3 current plan for user to choose   -->
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center text-center mb-5">
+        <div class="col-lg-8">
+            <h1>Subscription Plans</h1>
+            {% if current_subscription %}
+                <div class="alert alert-info">
+                    <p>Your current subscription: <strong>{{ current_subscription.plan_name }}</strong></p>
+                    <p>Valid until: {{ current_subscription.end_date.strftime('%Y-%m-%d') }}</p>
+                    <p>Selecting a new plan will extend your subscription from the current end date.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        {% for plan in plans %}
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h3 class="card-title">{{ plan.name }}</h3>
+                    <h4 class="text-primary">${{ "%.2f"|format(plan.price_incl_gst) }}</h4>
+                    <p class="text-muted">Including GST</p>
+                    <p>Duration: {{ plan.months }} months</p>
+                    {% if plan.discount_percent > 0 %}
+                        <p class="text-success">Save {{ plan.discount_percent }}%</p>
+                    {% endif %}
+                    <form method="get" action="{{ url_for('payment_page') }}" id="subscriptionForm{{ plan.plan_id }}">
+                        <input type="hidden" name="plan_id" value="{{ plan.plan_id }}">
+                        <button type="submit" class="btn btn-primary">
+                            {% if current_subscription %}
+                                Extend Subscription
+                            {% else %}
+                                Subscribe Now
+                            {% endif %}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}

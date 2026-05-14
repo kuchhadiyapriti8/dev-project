@@ -1,0 +1,74 @@
+{% extends 'admin/nav.html' %}
+
+    {% block title %}User Management{% endblock %}
+    <!-- Include Bootstrap CSS for styling -->
+    {% block style %}  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Include custom styles if necessary -->
+    <style>
+        .btn-custom {
+            background-color: #4CAF50; /* Green background for buttons */
+            color: white;
+        }
+        .btn-custom:hover {
+            background-color: #45a049;
+        }
+        .btn-secondary-custom {
+            background-color: #f0ad4e; /* Orange background for secondary buttons */
+            color: white;
+        }
+        .btn-secondary-custom:hover {
+            background-color: #ec971f;
+        }
+    </style>
+    {% endblock %}
+
+    {% block content %}
+    <div class="container mt-5">
+        <h2>User Management</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <form method="POST" action="{{ url_for('manage_users') }}">
+                        <input type="hidden" name="user_id" value="{{ user[0] }}">
+                        <td>{{ user[1] }}</td>
+                        <td>{{ user[3] }}</td>
+                        <td>
+                            <select name="role" class="form-control">
+                                <option value="member" {% if user[9] == 'member' %}selected{% endif %}>Member</option>
+                                <option value="moderator" {% if user[9] == 'moderator' %}selected{% endif %}>Moderator</option>
+                                <option value="admin" {% if user[9] == 'admin' %}selected{% endif %}>Admin</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="status" class="form-control">
+                                <option value="active" {% if user[10] == 'active' %}selected{% endif %}>Active</option>
+                                <option value="inactive" {% if user[10] == 'inactive' %}selected{% endif %}>Inactive</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-custom">Update</button>
+                        </td>
+                    </form>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endblock %}
+    {% block javascript %}
+    <!-- Include Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    {% endblock %}
+

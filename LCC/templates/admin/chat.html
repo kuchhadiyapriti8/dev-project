@@ -1,0 +1,210 @@
+{% extends 'admin/nav.html' %}
+{% block style %}
+<style>
+    .gradient-custom {
+        min-height: 100vh;
+        background: rgb(236, 242, 236);
+    }
+    .container {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+    .card-body {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+    .btn-custom {
+        background-color: #4CAF50; /* Green background for buttons */
+        color: white;
+    }
+    .btn-custom:hover {
+        background-color: #45a049;
+    }
+    .btn-secondary-custom {
+        background-color: #f0ad4e; /* Orange background for secondary buttons */
+        color: white;
+    }
+    .btn-secondary-custom:hover {
+        background-color: #ec971f;
+    }
+    .btn-danger-custom {
+        background-color: #d9534f; /* Red background for delete buttons */
+        color: white;
+    }
+    .btn-danger-custom:hover {
+        background-color: #c9302c;
+    }
+</style>
+<!-- Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+<!-- MDB -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.3.2/mdb.min.css" rel="stylesheet" />
+{% endblock %}
+{% block content %}
+<section class="gradient-custom">
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-12 col-lg-10 col-xl-8">
+                <div class="card">
+                    <div class="card-body p-4">
+                        <div class="row">
+                            <div class="col text-center">
+                                <button class="btn btn-custom" onclick="showNewMessageForm()">Report New Issue</button>
+                            </div>
+                        </div>
+                        <div class="row d-none" id="new-message-form">
+                            <div class="col">
+                                {% with messages = get_flashed_messages(with_categories=true) %}
+                                {% if messages %}
+                                  {% for category, message in messages %}
+                                    <div class="alert alert-{{ category }}">
+                                      {{ message }}
+                                    </div>
+                                  {% endfor %}
+                                {% endif %}
+                              {% endwith %}
+                                <form method="POST" action="{{ url_for('post_message') }}">
+                                    <div class="form-group">
+                                        <label for="message-title">Summary:</label>
+                                        <input type="text" class="form-control" id="message-title" name="title" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="message-content">Description::</label>
+                                        <textarea class="form-control" id="message-content" name="content" rows="4" required></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-custom">Submit</button>
+                                    <button type="button" class="btn btn-secondary-custom" onclick="hideNewMessageForm()">Cancel</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col">
+                                {% for issue in issues %}
+                                <div class="d-flex flex-start">
+                                    <img class="rounded-circle shadow-1-strong me-3" src="{{ url_for('static', filename='uploads/'~issue[6]) }}" alt="avatar" width="65" height="65" />
+                                    <div class="flex-grow-1 flex-shrink-1">
+                                        <div>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <p class="mb-1">{{issue[2]}}</p>
+                                                <p class="mb-1">
+                                                  User:- {{ issue[5] }} <span class="small">   Status: {{ issue[3] }}</span>
+                                                </p>
+                                                <div>
+                                                    <a href="#!" onclick="showReplyForm('{{issue[0]}}', this)"><i class="fas fa-reply fa-xs"></i><span class="small"> comment</span></a>
+                                                    <a href="#!" onclick="showEditForm('{{issue[0]}}', '{{issue[2]}}', '{{issue[3]}}', this)"><i class="fas fa-edit fa-xs"></i><span class="small"> edit</span></a>
+                                                </div>
+                                            </div>
+                                            <p class="small mb-0">Description:{{ issue[4] }}</p>
+                                            <div id="reply-form-container-{{issue[0]}}" class="d-none reply-form-container">
+                                                <form method="POST" action="{{ url_for('add_comment') }}">
+                                                    <input type="hidden" name="issue_id" value="{{ issue[0] }}">
+                                                    <div class="form-group">
+                                                        <label for="reply-content">Reply:</label>
+                                                        <textarea class="form-control" name="content" rows="4" required></textarea>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-custom">Submit</button>
+                                                    <button type="button" class="btn btn-secondary-custom" onclick="hideReplyForm('{{issue[0]}}')">Cancel</button>
+                                                </form>
+                                            </div>
+                                            <div id="edit-form-container-{{issue[0]}}" class="d-none edit-form-container">
+                                                <form method="POST" action="{{ url_for('edit_issue_status') }}">
+                                                    <input type="hidden" name="issue_id" value="{{ issue[0] }}">
+                                                    <div class="form-group">
+                                                        <label for="edit-status">Status:</label>
+                                                        <select class="form-control" id="edit-status" name="status" required>
+                                                            <option value="new" {% if issue[4] == 'new' %}selected{% endif %}>New</option>
+                                                            <option value="open" {% if issue[4] == 'open' %}selected{% endif %}>Open</option>
+                                                            <option value="stalled" {% if issue[4] == 'stalled' %}selected{% endif %}>Stalled</option>
+                                                            <option value="resolved" {% if issue[4] == 'resolved' %}selected{% endif %}>Resolved</option>
+                                                        </select>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-custom">Update Status</button>
+                                                    <button type="button" class="btn btn-secondary-custom" onclick="hideEditForm('{{issue[0]}}')">Cancel</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        {% if issue[0] in comments %}
+                                        <div class="mt-4">
+                                            {% for comment in comments[issue[0]] %}
+                                            <div class="d-flex flex-start mt-4">
+                                                <img class="rounded-circle shadow-1-strong me-3" src="{{url_for('static', filename='uploads/'~comment[6])}}" alt="avatar" width="65" height="65" />
+                                                <div class="flex-grow-1 flex-shrink-1">
+                                                    <div>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <p class="mb-1">
+                                                                {{ comment[5] }} <span class="small">- {{ comment[3]}}</span>
+                                                            </p>
+
+
+                                                           
+                                                        </div>
+                                                        <p class="small mb-0">{{ comment[4] }}</p>
+                                                       
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <hr>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block javascript %}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.3.2/mdb.umd.min.js"></script>
+<script>
+    function showNewMessageForm() {
+        document.getElementById('new-message-form').classList.remove('d-none');
+    }
+    function hideNewMessageForm() {
+        document.getElementById('new-message-form').classList.add('d-none');
+    }
+    function showReplyForm(messageId, element) {
+        hideAllReplyForms();
+        var replyFormContainer = document.getElementById('reply-form-container-' + messageId);
+        replyFormContainer.classList.remove('d-none');
+        var replyLink = element;
+        var replySection = replyLink.closest('.flex-grow-1');
+        replySection.appendChild(replyFormContainer);
+    }
+    function hideReplyForm(messageId) {
+        document.getElementById('reply-form-container-' + messageId).classList.add('d-none');
+    }
+    function hideAllReplyForms() {
+        var replyForms = document.getElementsByClassName('reply-form-container');
+        for (var i = 0; i < replyForms.length; i++) {
+            replyForms[i].classList.add('d-none');
+        }
+    }
+    function showEditForm(messageId, title, content, element) {
+        hideAllEditForms();
+        var editFormContainer = document.getElementById('edit-form-container-' + messageId);
+        editFormContainer.classList.remove('d-none');
+        var editLink = element;
+        var editSection = editLink.closest('.flex-grow-1');
+        editSection.appendChild(editFormContainer);
+        editFormContainer.querySelector('input[name="title"]').value = title;
+        editFormContainer.querySelector('textarea[name="content"]').value = content;
+    }
+    function hideEditForm(messageId) {
+        document.getElementById('edit-form-container-' + messageId).classList.add('d-none');
+    }
+    function hideAllEditForms() {
+        var editForms = document.getElementsByClassName('edit-form-container');
+        for (var i = 0; i < editForms.length; i++) {
+            editForms[i].classList.add('d-none');
+        }
+    }
+</script>
+{% endblock %}

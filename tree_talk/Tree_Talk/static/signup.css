@@ -1,0 +1,166 @@
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #000309;
+    color: white;
+    margin: 0;
+    padding: 0;
+}
+
+/* Signup Form Styles */
+.signup-form {
+    display: flex;
+    border-radius: 0.5rem;
+    padding: 2rem;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    margin: 4rem auto;
+    width: 90%;
+    max-width: 1000px;
+    background-color: #001233;
+    justify-content: center;
+}
+
+.left-signup {
+    flex: 1;
+    background-color: #000309;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    text-align: center;
+    padding: 2rem;
+    margin-right: 2rem;
+}
+
+.left-signup img {
+    height: 180px;
+    width: 200px;
+}
+
+.tree-talk {
+    color: #00FF00; /* Green color for "TREE" */
+    font-family: 'Brush Script MT', cursive;
+    font-size: 2.5rem;
+    margin-top: 1rem;
+}
+
+.right-signup {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    background-color: #000309;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    padding: 2rem;
+}
+
+.form-header {
+    color: #f4f2ef; /* Gold color */
+    font-size: 2rem; /* Larger font size for the header */
+    margin-bottom: 1.5rem; /* Spacing below the header */
+    text-align: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.form-row {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+}
+
+label {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+input, select {
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: #002B46;
+    color: white;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 0.875rem;
+}
+
+input:focus, select:focus {
+    border-color: #F8BE5C;
+    box-shadow: 0 0 5px #F8BE5C;
+}
+
+.error {
+    color: #f8d7da;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+.password-input-container {
+    display: flex;
+    align-items: center;
+}
+
+.password-input-container i {
+    margin-left: 0.5rem;
+    cursor: pointer;
+    color: #F8BE5C;
+}
+
+.btn-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.button-tertiary {
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 0 10px;
+    font-size: 0.875rem;
+}
+
+/* Reset Button */
+.button-reset {
+    background-color: #003366; /* Darker shade of blue */
+    color: #F8BE5C; /* Gold text color */
+}
+
+.button-reset:hover {
+    background-color: #001a33; /* Even darker shade on hover */
+}
+
+/* Signup Button */
+.button-signup {
+    background-color: #F8BE5C; /* Gold color */
+    color: #001233; /* Dark blue text color */
+}
+
+.button-signup:hover {
+    background-color: #e0a84d; /* Slightly darker gold on hover */
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .signup-form {
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .left-signup, .right-signup {
+        margin: 1rem 0;
+    }
+
+    .btn-container {
+        flex-direction: column;
+    }
+
+    .button-tertiary {
+        margin: 0.5rem 0;
+    }
+}

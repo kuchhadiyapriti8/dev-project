@@ -1,0 +1,63 @@
+{% extends "userbase.html" %}
+
+{% block title %}Receipt{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="d-flex justify-content-center">
+            <a href="/View_subscription">
+                < Back to Subscription History</a>
+        </div>
+        <br><br>
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-white text-black text-center">
+                    <img src="{{ url_for('static', filename='logo.svg') }}" alt="Logo" class="img-fluid"
+                        style="width: 150px">
+                    <h4>Subscription Receipt</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4 d-flex justify-content-center">
+                        <div class="text-start" style="width: 50%;">
+                            <h5 class="text-muted">Customer Information</h5>
+                            <p class="mb-1">Username: <strong>{{ username.username }}</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 d-flex justify-content-center">
+                        <div class="text-start" style="width: 50%;">
+                            <h5 class="text-muted">Subscription Details</h5>
+                            <p class="mb-1">Plan: <strong>{{ plan_name }}</strong></p>
+                            <p class="mb-1">Start Date: <strong>{{ start_date }}</strong></p>
+                            <p class="mb-1">End Date: <strong>{{ end_date }}</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 d-flex justify-content-center">
+                        <div class="text-start" style="width: 50%;">
+                            <h5 class="text-muted">Payment Information</h5>
+                            <p class="mb-1">Amount Paid: <strong>${{ amount_paid }}</strong></p>
+                            {% if gst_paid and gst_paid.gst_paid > 0 %}
+                            <p class="mb-1">GST Amount: <strong>${{ "%.2f"|format(gst_paid.gst_paid) }}</strong></p>
+                            {% endif %}
+                            <p class="mb-1">Payment Time: <strong>{{ pay_date }}</strong></p>
+                            {% if card_last4 %}
+                            <p class="mb-1">Card: <strong>**** **** **** {{ card_last4 }}</strong></p>
+                            {% endif %}
+                            <p class="mb-1">Billing Country: <strong>{{ billing_country }}</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <p class="text-muted small">Thank you for choosing YOGO!</p>
+                        <p class="text-muted small">This is a computer-generated receipt and does not require a
+                            signature.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

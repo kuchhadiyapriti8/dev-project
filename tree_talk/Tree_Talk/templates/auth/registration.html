@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup Form</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='signup.css')}}"">
+</head>
+<body>
+  <div class="signup-form">
+    <div class="left-signup">
+      <img src="{{ url_for('static', filename='designer.png') }}" alt="Seazone" style="height: 180px; width: 200px;">
+      <h1 class="tree-talk">TREE TALK</h1>
+    </div>
+    <div class="right-signup">
+      <h1 class="form-header">Sign Up</h1> <!-- Header added here -->
+      <form method="POST" action="{{ url_for('register') }}">
+        <div class="form-row">
+          <label for="username">Username:</label>
+          <input type="text" id="username" name="username">
+          <span class="error" id="usernameError"></span>
+        </div>
+        <div class="form-row">
+          <label for="password">Password:</label>
+          <div class="password-input-container">
+            <input type="password" id="password" name="password">
+            <!-- <i id="passwordIcon" class="fa fa-eye"></i> -->
+          </div>
+          <span class="error" id="passwordError"></span>
+        </div>
+        <div class="form-row">
+          <label for="email">Email:</label>
+          <input type="text" id="email" name="email">
+          <span class="error" id="emailError"></span>
+        </div>
+        <div class="form-row">
+          <label for="firstName">First Name:</label>
+          <input type="text" id="firstName" name="firstName">
+          <span class="error" id="firstNameError"></span>
+        </div>
+        <div class="form-row">
+          <label for="lastName">Last Name:</label>
+          <input type="text" id="lastName" name="lastName">
+          <span class="error" id="lastNameError"></span>
+        </div>
+        <div class="form-row">
+          <label for="birthDate">Birth Date:</label>
+          <input type="date" id="birthDate" name="birthDate">
+          <span class="error" id="birthDateError"></span>
+        </div>
+        <div class="form-row">
+          <label for="location">Location:</label>
+          <input type="text" id="location" name="location">
+          <span class="error" id="locationError"></span>
+        </div>
+        <div class="btn-container">
+          <button type="reset" class="button-tertiary" >Reset</button>
+          <button class="button-tertiary" type="submit">Signup</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+</body>
+</html>

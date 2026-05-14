@@ -1,0 +1,57 @@
+{% extends "userbase.html" %}
+
+{% set active_page = 'support' %}
+
+{% block title %}Support{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Support</h1>
+    <p>Submit a help request or report a bug using the form below. We'll get back to you as soon as possible.</p>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Support form -->
+    <form method="POST" enctype="multipart/form-data" class="mt-4">
+        <div class="mb-3">
+            <label for="request_type" class="form-label">Request Type</label>
+            <select class="form-select" id="request_type" name="request_type" required>
+                <option value="" disabled selected>Select a type</option>
+                <option value="Help">Help</option>
+                <option value="Bug">Bug</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" name="title" maxlength="100" required>
+            <div class="form-text">Briefly describe your issue (100 characters max).</div>
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="5" maxlength="1000" required></textarea>
+            <div class="form-text">Provide detailed information about your issue (1000 characters max).</div>
+        </div>
+
+        <div class="mb-3">
+            <label for="images" class="form-label">Attach Images (Optional)</label>
+            <input type="file" class="form-control" id="images" name="images" accept=".png,.jpg,.jpeg,.gif" multiple>
+            <div class="form-text">Upload screenshots or relevant images (PNG, JPG, JPEG, GIF only).</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit Request</button>
+    </form>
+</div>
+{% endblock %}
+

@@ -1,0 +1,72 @@
+{% extends 'userbase.html' %}
+
+{% block title %}Staff Home{% endblock %}
+
+{# Set the active page to be highlighted in the navigation bar. #}
+{% set active_page = 'home' %}
+
+{% block content %}
+
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    
+<section class="container py-5 text-center">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <h1>Editor Home Page</h1>
+            <p class="lead text-muted">Welcome to the Editor Dashboard! As a YOGO editor, you can monitor content, edit inappropriate information, and ensure the quality of platform content. You can also create and share your own travel stories to inspire other users.</p>
+        </div>
+    </div>
+</section>
+
+
+<div
+  class="bg-image card shadow-1-strong"
+  style="background-image: url('https://www.purevacations.com/wp-content/uploads/2021/01/Traveling-With-Your-Puppy.jpg'); 
+        width: 800px; 
+        height: 500px;
+        margin: 20px auto"
+>
+
+  <div class="card-body text-dark">
+    <h5 class="card-title">My Journey</h5>
+    <p class="card-text">
+        Access your personal journal and track your journey.
+    </p>
+    <button class="btn btn-primary" type="button">
+        <a href="{{ url_for('myjournal') }}" class="btn btn-primary">Open My Journal</a>
+    </button>
+  </div>
+</div>
+
+<div
+  class="bg-image card shadow-1-strong"
+  style="background-image: url('https://www.explore.com/img/gallery/avoid-doing-any-of-these-things-when-traveling-solo/intro-1709732304.jpg'); 
+        width: 800px; 
+        height: 500px;
+        margin: 20px auto"
+>
+  <div class="card-body text-dark">
+    <h5 class="card-title">All Journeys</h5>
+    <p class="card-text">
+        Access all user journal.
+    </p>
+    <button class="btn btn-primary" type="button">
+        <a href="{{ url_for('alljournal') }}" class="btn btn-primary">Open all Journal</a>
+    </button>
+  </div>
+</div>
+
+
+
+{% endblock %}

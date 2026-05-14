@@ -1,0 +1,69 @@
+{% extends 'userbase.html' %}
+
+{% block title %}YOGO Pro Journeys{% endblock %}
+
+{% set active_page = 'yogopro' %}
+
+{% block content %}
+<section class="container py-5">
+    <div class="row justify-content-center text-center">
+        <div class="col-lg-7">
+            <h1>YOGO Pro Journeys</h1>
+            <p class="lead text-muted">Exclusive premium travel experiences from our community.</p>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+</section>
+
+<section class="container">
+    {% if my_journey_is_empty %}
+        <div class="alert alert-warning">No premium journeys found.</div>
+    {% else %}
+        <div class="row">
+            {% for journal in journals %}
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ journal['j_title'] }}</h5>
+                        <p class="card-text">{{ journal['j_description'] }}</p>
+                        <p class="card-text"><small class="text-muted">By: {{ journal['username'] }}</small></p>
+                        <p class="card-text"><small class="text-muted">Start Date: {{ journal['j_startdate'] }}</small></p>
+                        
+                        <h6>Events:</h6>
+                        {% if journal.events %}
+                            <ul>
+                                {% for event in journal.events %}
+                                    <li>
+                                        <strong>{{ event['e_title'] }}</strong><br>
+                                        {{event['e_description']}}<br>
+                                        <p class="text-muted">
+                                            {{ event['e_startdatetime'] }} to {{ event['e_enddatetime'] }}<br>
+                                            Duration: {{ event['duration'] }} Hours<br>
+                                            Location: {{ event['e_location'] }}
+                                        </p>
+                                        {% if event['e_image'] %}
+                                            <img src="{{ url_for('static', filename=event['e_image']) }}" 
+                                                 alt="{{ event['e_title'] }}" 
+                                                 style="max-width: 300px; height: auto;">
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p>No events for this journal.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

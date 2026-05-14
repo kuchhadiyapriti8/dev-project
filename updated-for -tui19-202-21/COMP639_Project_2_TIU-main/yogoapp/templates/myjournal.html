@@ -1,0 +1,260 @@
+{% extends 'userbase.html' %}
+
+{% block title %}My Journals{% endblock %}
+
+{# Set the active page to be highlighted in the navigation bar. #}
+{% set active_page = 'myjournal' %}
+
+{% block content %}
+<section class="container py-5">
+    <div class="row justify-content-center text-center">
+        <div class="col-lg-7">
+            <h1>My Journals</h1>
+            <p class="lead text-muted">Here's all your journal, you can edit it or set the status to public, so other users can see it !</p>
+        </div>
+    </div>
+</section>
+
+
+<section class="container pb-5">
+    <div class="row justify-content-center text-center">
+        <div class="col-lg-6">
+            <div class="d-grid gap-2">
+                <button class="btn btn-primary btn-lg shadow-sm hover-zoom" type="button" data-bs-toggle="collapse" data-bs-target="#addJournalForm">
+                    <i class="bi bi-plus-circle-fill me-2"></i>
+                    Create New Journey
+                </button>
+            </div>
+            <div class="collapse mt-4" id="addJournalForm">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">Create Your New Journey</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ url_for('add_journal') }}" method="post">
+                            <div class="mb-3">
+                                <label for="j_title" class="form-label">Journey Title</label>
+                                <input type="text" class="form-control" id="j_title" name="j_title" maxlength="255" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="j_description" class="form-label">Description</label>
+                                <textarea class="form-control" id="j_description" name="j_description" rows="3" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="j_startdate" class="form-label">Start Date</label>
+                                <input type="date" class="form-control" id="j_startdate" name="j_startdate" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="j_status" class="form-label">Status</label>
+                                <select class="form-select" id="j_status" name="j_status" required>
+                                    <option value="private">Private</option>
+                                    <option value="public">Public</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Create Journey</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="container py-5">
+    {% if my_journey_is_empty %}
+        <div class="alert alert-warning">You have not posted any journal.</div>
+    {% else %}
+        <div class="row">
+            {% for journal in my_journals %}
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="card-title mb-0">{{ journal['j_title'] }}</h5>
+                            <div>
+                                <a href="{{ url_for('edit_myjournal', journal_id=journal['journal_id']) }}"
+                                   class="btn btn-sm btn-outline-primary">
+                                    Edit
+                                </a>
+
+                                <form action="{{ url_for('delete_myjournal', journal_id=journal['journal_id']) }}"
+                                      method="POST" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"
+                                            onclick="return confirm('Are you sure you want to delete this journal?')">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <p class="card-text">{{ journal['j_description'] }}</p>
+                        <p class="card-text"><small class="text-muted">Status: {{ journal['j_status'] }}</small></p>
+                        <p class="card-text"><small class="text-muted">Start Date: {{ journal['j_startdate'] }}</small></p>
+
+                        <h6>Events:</h6>
+                            {% if journal.events %}
+                                <ul>
+                                    {% for event in journal.events %}
+                                        <li>
+                                            <strong>{{ event['e_title'] }}</strong> <br>
+                                                {{event['e_description']}}<br>
+                                                <p class="text-muted">{{ event['e_startdatetime'] }} to {{ event['e_enddatetime'] }}<br>
+                                                Duration: {{ event['duration'] }} Hours<br>
+                                                Location: {{ event['e_location'] }}<br></p>
+                                            {% if event['e_image'] %}
+                                                {% set image_list = event['e_image'].split(',') %}
+                                                {% for image in image_list %}
+                                                    <img src="{{ url_for('static', filename=image) }}" 
+                                                         alt="{{ event['e_title'] }}"
+                                                         style="max-width: 300px; height: auto; margin-right: 10px;">
+                                                {% endfor %}
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p>No events for this journal.</p>
+                            {% endif %}
+
+
+                            <div class="mt-4">
+                                <form action="{{ url_for('changelog') }}" method="post">
+                                    <input
+                                      type="hidden"
+                                      name="journal_id"
+                                      value="{{journal['journal_id']}}"
+                                    />
+                                    {% if session.get('subscription_status') != "Free" %}
+                                    <button class="btn btn-outline-success mb-3">
+                                      View Change Log
+                                    </button>
+                                    {% endif %}
+                                  </form>
+                                <form action="{{ url_for('status_change') }}" method="post">
+                                   <input type="hidden" name="journal_id" value="{{journal['journal_id']}}" >
+                                   <input type="hidden" name="j_status" value="{{journal['j_status']}}" >
+                                    {% if journal['j_status'] == "public" %}
+                                    <button class="btn btn-outline-danger mb-3" type="submit">
+                                        Make Private
+                                    </button>
+                                    {% else %}
+                                    <button class="btn btn-outline-success mb-3" type="submit">
+                                        Make Public
+                                    </button>
+                                    {% endif %}
+                                </form>
+                                
+                                <form action="{{ url_for('publish_journal', journal_id=journal['journal_id']) }}" method="POST">
+                                    <input type="hidden" name="journal_id" value="{{ journal['journal_id'] }}">
+                                    {% if journal['j_published'] == 'yes' %}
+                                        <button class="btn btn-warning mb-3" type="submit">Unpublish from Homepage</button>
+                                    {% else %}
+                                        <button class="btn btn-warning mb-3" type="submit">Publish to Homepage</button>
+                                    {% endif %}
+                                </form>
+
+
+
+
+                                <button class="btn btn-primary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#addEventForm{{ journal['journal_id'] }}">
+                                    Add New Event
+                                </button>
+                                {% if request.args.get('time_error') and request.args.get('journal_id')|int == journal['journal_id'] %}
+                                        <div class="alert alert-danger">
+                                            Please re-enter time, the end time must be later than the start time and journal start time.
+                                        </div>
+                                    {% endif %}
+                                <div class="collapse" id="addEventForm{{ journal['journal_id'] }}">
+
+                                    <form action="{{ url_for('add_event', journal_id=journal['journal_id']) }}" method="post" enctype="multipart/form-data">
+                                        <div class="mb-3">
+                                            <label for="e_title" class="form-label">Event Title</label>
+                                            <input type="text" class="form-control" id="e_title" name="e_title" maxlength="255" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="e_description" class="form-label">Description</label>
+                                            <textarea class="form-control" id="e_description" name="e_description" required></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="e_startdatetime" class="form-label">Start Date and Time</label>
+                                            <input type="datetime-local" class="form-control"
+                                                   id="e_startdatetime"
+                                                   name="e_startdatetime"
+                                                   min="{{ journal['j_startdate'].strftime('%Y-%m-%d') }}T00:00"
+                                                   required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="e_enddatetime" class="form-label">End Date and Time (Optional)</label>
+                                            <input type="datetime-local" class="form-control"
+                                                   id="e_enddatetime"
+                                                   name="e_enddatetime"
+                                                   min="{{ e_startdatetime if e_startdatetime else journal['j_startdate'].strftime('%Y-%m-%d') + 'T00:00' }}">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="e_location" class="form-label">Location</label>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="e_location"
+                                                   name="e_location"
+                                                   list="locationList"
+                                                   maxlength="50"
+                                                   placeholder="Please enter a rough location or 'near' somewhere"
+                                                   required>
+                                            <datalist id="locationList">
+                                                {% for location in locations %}
+                                                    <option value="{{ location['e_location'] }}">
+                                                {% endfor %}
+                                            </datalist>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="e_image" class="form-label">Image (Optional)</label>
+                                            <input type="file" class="form-control" id="e_image" name="e_image" accept="image/*">
+                                        </div>
+                                        <!-- Cover Image Radio Button -->
+                                        <div class="mb-3">
+                                            <label class="form-label d-block">Make this the Cover Image?</label>
+                                            <div class="form-check form-check-inline">
+                                              <input
+                                                class="form-check-input"
+                                                type="radio"
+                                                name="e_cover"
+                                                id="cover_yes"
+                                                value="true"
+                                                required
+                                              />
+                                              <label class="form-check-label" for="cover_yes">Yes</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                              <input
+                                                class="form-check-input"
+                                                type="radio"
+                                                name="e_cover"
+                                                id="cover_no"
+                                                value="false"
+                                              />
+                                              <label class="form-check-label" for="cover_no">No</label>
+                                            </div>
+                                          </div>
+                                        <div class="d-flex gap-2">
+                                            <button type="submit" class="btn btn-primary">Save Event</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#addEventForm{{ journal['journal_id'] }}">
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            {% endfor %}
+        </div>
+    {% endif %}
+</section>
+
+<div style="height: 100px;"></div>
+
+{% endblock %}

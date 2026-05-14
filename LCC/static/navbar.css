@@ -1,0 +1,190 @@
+body, main {
+    padding-top: 80px;
+    box-sizing: border-box;
+    overflow-x: hidden;  /* Ensure no horizontal scrollbar */
+}
+
+.NavbarItems {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.25);
+    z-index: 9999;
+    width: 100%;
+    height: 80px;
+    background-color: #000309;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%);
+    opacity: 0.8;
+    transition: top 0.5s;
+}
+
+.navbar-logo {
+    color: white;
+    width: 75px;
+    height: 75px;
+    cursor: pointer;
+    font-size: 2rem;
+    padding: 0 0 0 1rem;
+}
+
+.welcome-banner {
+    color: #F8BE5C;
+    font-size: 1.5rem;
+    font-weight: 600;
+    padding: 0 1rem;
+    margin: 0;
+}
+
+.welcome-banner h2 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.welcome-banner p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: white;
+}
+
+.nav-menu {
+    display: grid;
+    grid-template-columns: repeat(9, auto);
+    grid-gap: 10px;
+    list-style: none;
+    align-items: center;
+    padding: 0 1rem;
+}
+
+.nav-links {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 370;
+    padding: 0.5rem 1rem;
+    white-space: nowrap;
+    border-radius: 1px;
+}
+
+.nav-links i {
+    padding-right: 10px;
+}
+
+.nav-links:hover {
+    background-color: white;
+    color: #001233;
+    border-radius: 5px;
+    transition: all 0.2s ease-in-out;
+}
+
+.nav-links-mobile {
+    display: none;
+}
+
+.menu-icons {
+    display: none;
+}
+
+.button-primary a,
+.button-secondary a {
+    text-decoration: none;
+}
+
+.button-primary a:hover,
+.button-secondary a:hover {
+    text-decoration: none;
+}
+
+.button-primary a {
+    color: black;
+}
+
+.button-primary:hover a {
+    color: #d9bf61;
+}
+
+.button-secondary a {
+    color: white;
+}
+
+.button-secondary:hover a {
+    color: black;
+}
+
+/* Responsive Navbar */
+
+@media screen and (max-width: 850px) {
+    .NavbarItems {
+        z-index: 99;
+        background-color: #000309;
+        opacity: 0.8;
+    }
+
+    .nav-menu {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        background-color: #000309;
+        width: 100%;
+        height: auto;
+        position: absolute;
+        top: 0;
+        left: -100%;
+        opacity: 0;
+        align-items: stretch;
+        padding: 80px 0 30px 0;
+        margin: 0;
+        transition: all 0.5s ease-in-out;
+        border-radius: 15px;
+    }
+
+    .nav-menu.active {
+        left: 0;
+        z-index: -1;
+        opacity: 1;
+        background-color: #000309;
+        transition: all 0.5s ease-in-out;
+        border-radius: 15px;
+        margin: auto;
+    }
+
+    .nav-links {
+        display: block;
+        width: 100%;
+        font-size: 1.2rem;
+        padding: 2rem 0;
+        justify-content: center;
+    }
+
+    .nav-links:hover {
+        background-color: #fff;
+        color: black;
+        border-radius: 5px;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .menu-icons {
+        display: block;
+        padding: 0 1rem 0 0;
+    }
+
+    .menu-icons i {
+        font-size: 1.2rem;
+        cursor: pointer;
+        color: white;
+    }
+
+    .welcome-banner {
+        display: none;
+    }
+
+    #navbar {
+        position: relative;
+        opacity: 0.8;
+        background-color: #000309;
+        z-index: 99;
+    }
+}
