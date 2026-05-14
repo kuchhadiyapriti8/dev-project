@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Paddocks{% endblock %}
+
+{% block content %}
+
+<p>Paddocks</p>
+<!-- New line (which you are free to edit or delete): -->
+<p>{% if curr_date %}Today is: {{curr_date.strftime("%d %B %Y")}}{% endif %}</p>
+
+{% endblock %}

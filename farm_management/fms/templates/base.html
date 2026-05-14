@@ -1,0 +1,57 @@
+<!-- base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Farm Management Simulator{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background-color: #f7f7f7;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin-top: 40px;
+        }
+        h1, h2 {
+            color: #3E5C76;
+        }
+        .table thead th {
+            background-color: #dfe6ee;
+            color: #3E5C76;
+        }
+        .table th, .table td {
+            vertical-align: middle;
+            padding: 12px;
+        }
+        .table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        .navbar {
+            background-color: #3E5C76;
+        }
+        .navbar-brand, .nav-link {
+            color: #ffffff !important;
+        }
+        .nav-link:hover {
+            color: #dfe6ee !important;
+        }
+        .form-control {
+            width: 100%;
+        }
+        .btn {
+            background-color: #3E5C76;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    {% block content %}{% endblock %}
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

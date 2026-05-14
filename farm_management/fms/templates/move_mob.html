@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-5">Move Mob to a New Paddock</h1>
+<!-- Add this in your base.html or specific template -->
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="alert alert-info">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+
+    <form method="POST" action="{{ url_for('move_mob') }}">
+        <!-- Table of Mobs and Current Paddock -->
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Mob Name</th>
+                    <th>Current Paddock</th>
+                    <th>Move to Paddock</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for mob in mobs_data %}
+                <tr>
+                    <td>{{ mob[1] }}</td>  <!-- mob[1] is mob name -->
+                    <td>{{ mob[2] }}</td>  <!-- mob[2] is current paddock name -->
+                    <td>
+                        <select name="new_paddock_{{ mob[0] }}" class="form-control">
+                            <option value="" disabled selected>Select Paddock</option>
+                            {% for paddock in paddocks_data %}
+                            <option value="{{ paddock[0] }}" {% if paddock[0] == mob[2] %}selected{% endif %}>
+                                {{ paddock[1] }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Move Mobs Button -->
+        <div class="text-right mt-4">
+            <button type="submit" class="btn btn-primary">Move Selected Mobs</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

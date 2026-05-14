@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-5">Move Mob to a New Paddock</h1>
+
+    <!-- Move Mobs Form -->
+    <form action="{{ url_for('move_mob_action') }}" method="POST">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Mob Name</th>
+                    <th>Current Paddock</th>
+                    <th>Move to Paddock</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for mob in mobs_data %}
+                <tr>
+                    <td>{{ mob[0] }}</td>  <!-- Mob Name -->
+                    <td>{{ mob[1] }}</td>  <!-- Current Paddock -->
+                    <td>
+                        <select class="form-control" name="paddock_for_{{ mob[0] }}">
+                            {% for paddock in paddocks %}
+                                <option value="{{ paddock[0] }}">{{ paddock[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="text-right mt-4">
+            <button type="submit" class="btn btn-primary">Move Selected Mobs</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

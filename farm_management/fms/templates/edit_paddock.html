@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Paddock{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-5">Edit Paddock</h1>
+
+    <form method="POST">
+        <div class="form-group">
+            <label for="name">Paddock Name:</label>
+            <input type="text" name="name" class="form-control" value="{{ paddock[0] }}" required>
+        </div>
+        <div class="form-group">
+            <label for="area">Area (ha):</label>
+            <input type="number" name="area" class="form-control" value="{{ paddock[1] }}" required>
+        </div>
+        <div class="form-group">
+            <label for="dm_per_ha">DM/ha (kg):</label>
+            <input type="number" name="dm_per_ha" class="form-control" value="{{ paddock[2] }}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Update Paddock</button>
+    </form>
+</div>
+{% endblock %}

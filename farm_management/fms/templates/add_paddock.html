@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Add Paddock{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-5">Add Paddock</h1>
+
+    <!-- Display flash messages for errors and success -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="alert alert-info">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        <div class="form-group">
+            <label for="name">Paddock Name:</label>
+            <input type="text" name="name" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="area">Area (ha):</label>
+            <!-- Min value set to 1 for client-side validation -->
+            <input type="number" name="area" class="form-control" required min="1" step="any">
+        </div>
+        
+        <div class="form-group">
+            <label for="dm_per_ha">DM/ha (kg):</label>
+            <input type="number" name="dm_per_ha" class="form-control" required>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Add Paddock</button>
+    </form>
+</div>
+{% endblock %}

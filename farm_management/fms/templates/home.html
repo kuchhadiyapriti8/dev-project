@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}FMS - Home{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Main Heading -->
+    <div class="row align-items-center">
+        <!-- Left Section: Text Introduction -->
+        <div class="col-md-6 text-center text-md-left">
+            <!-- Page Heading -->
+            <h1 class="display-4 font-weight-bold mb-3">Welcome to the Farm Management Simulator</h1>
+
+            <!-- Brief Introduction -->
+            <p class="lead">Efficiently manage your farm's pasture and livestock. Move your mobs, monitor growth, and keep an eye on pasture consumption to ensure your farm is operating at its peak performance.</p>
+
+            <!-- Subheading: Date Display -->
+            <!-- {% if curr_date %}
+            <p class="font-weight-bold">Today's Date: {{curr_date.strftime("%d %B %Y")}}</p>
+            {% endif %} -->
+            
+            <!-- Call to Action Button -->
+        </div>
+
+        <!-- Right Section: Image -->
+        <div class="col-md-6 text-center mt-4 mt-md-0">
+            <img src="{{ url_for('static', filename='farm.jpeg') }}" alt="Farm Management" class="img-fluid rounded shadow-sm" style="max-width: 350px;">
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Paddocks{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <h1 class="text-center mb-5">Paddocks</h1>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="alert alert-info">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('advance_date') }}">
+        <button type="submit" class="btn btn-warning">Advance Current Date by One Day</button>
+    </form>
+
+    <form method="POST" action="{{ url_for('reset_date') }}" class="mt-3">
+        <button type="submit" class="btn btn-danger">Reset Current Date</button>
+    </form>
+
+    <table class="table table-bordered table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Area (ha)</th>
+                <th>DM/ha (kg)</th>
+                <th>Total DM (kg)</th>
+                <th>Mob</th>
+                <th>Stock (Animals)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for paddock in paddocks %}
+            <tr {% if paddock[3] < 1500 %}style="background-color:red;"{% elif paddock[3] < 1800 %}style="background-color:yellow;"{% endif %}>
+                <td>{{ paddock[1] }}</td>
+                <td>{{ paddock[2] }}</td>
+                <td>{{ paddock[3] }}</td>
+                <td>{{ "%.2f"|format(paddock[4]) }}</td>
+                <td>{{ paddock[5] if paddock[5] else '' }}</td>
+                <td>{{ paddock[6] if paddock[6] else 'N/A' }}</td>
+                <td>
+                    <a href="{{ url_for('edit_paddock', paddock_id=paddock[0]) }}" class="btn btn-info">Edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ url_for('add_paddock') }}" class="btn btn-success">Add New Paddock</a>
+</div>
+{% endblock %}

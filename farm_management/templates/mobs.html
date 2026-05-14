@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Mobs - Farm Management Simulator{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-5">Mobs and Paddocks</h1>
+
+    <!-- Table to display mobs and paddock names -->
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Mob Name</th>
+                <th>Paddock Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mob, paddock in mobs_data %}
+            <tr>
+                <td>{{ mob }}</td>
+                <td>{{ paddock }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

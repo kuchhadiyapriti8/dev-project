@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Stock List by Mob{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-5">Stock List by Mob</h1>
+
+    {% for mob in mobs_data %}
+    <!-- Mob Information -->
+    <div class="mob-header">
+        <h2>{{ mob[1] }}</h2>  <!-- mob[1] is mob name -->
+        <p><strong>Stock Count:</strong> {{ mob[2] }}</p>  <!-- mob[2] is stock count -->
+        <p><strong>Average Weight:</strong> {{ mob[3]|round(2) }} kg</p>  <!-- mob[3] is average weight -->
+    </div>
+
+    <!-- Stock Table -->
+    <div>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Age (Years)</th>
+                    <th>Date of Birth</th>
+                    <th>Weight (kg)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if stock_by_mob[mob[0]] %}
+                {% for stock in stock_by_mob[mob[0]] %}
+                <tr>
+                    <td>{{ stock.id }}</td>
+                    <td>{{ stock.age_years }}</td>
+                    <td>{{ stock.dob }}</td>
+                    <td>{{ stock.weight|round(2) }}</td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-center">No stock in this mob.</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    {% endfor %}
+
+</div>
+{% endblock %}

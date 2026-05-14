@@ -1,0 +1,44 @@
+/* Navbar Styling */
+.navbar {
+    background-color: #3E5C76;
+    color: #ffffff;
+    padding: 1rem;
+  }
+  
+  .navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .navbar-brand {
+    font-size: 1.5rem;
+    color: #ffffff;
+    text-decoration: none;
+  }
+  
+  .navbar-nav {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+  }
+  
+  .navbar-nav li a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1rem;
+  }
+  
+  .navbar-nav li a:hover {
+    color: #D4AF37; /* Gold color on hover */
+  }
+  
+  .navbar-date {
+    font-size: 1rem;
+    color: #ffffff;
+  }
+  
+  .navbar-date p {
+    margin: 0;
+  }
+  

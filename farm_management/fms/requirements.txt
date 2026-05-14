@@ -1,0 +1,5 @@
+Flask==2.0.1
+mysql-connector-python==8.0.26
+Jinja2==3.0.1
+pathlib==1.0.1
+
